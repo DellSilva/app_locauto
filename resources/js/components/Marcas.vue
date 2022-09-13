@@ -31,7 +31,11 @@
                     <template v-slot:conteudo>
                         <table-component 
                             :dados="marcas"
-                            :titulos="['ID', 'Nome', 'Imagem']"
+                            :titulos="{
+                                id: {titulo: 'ID', tipo: 'texto'},
+                                nome: {titulo: 'Nome', tipo: 'texto'},
+                                imagem: {titulo: 'Imagem', tipo: 'imagem'}
+                            }"
                         ></table-component>
                     </template>
                     <template v-slot:rodape>
