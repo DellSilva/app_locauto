@@ -29,19 +29,29 @@
 
                 <card-component titulo="Ralação de marcas">
                     <template v-slot:conteudo>
-                        <table-component 
-                            :dados="marcas.data"
-                            :titulos="{
-                                id: {titulo: 'ID', tipo: 'texto'},
-                                nome: {titulo: 'Nome', tipo: 'texto'},
-                                imagem: {titulo: 'Imagem', tipo: 'imagem'}
-                            }"
-                        ></table-component>
+                        <table-component :dados="marcas.data" :titulos="{
+                            id: {titulo: 'ID', tipo: 'texto'},
+                            nome: {titulo: 'Nome', tipo: 'texto'},
+                            imagem: {titulo: 'Imagem', tipo: 'imagem'}
+                        }"></table-component>
                     </template>
                     <template v-slot:rodape>
-                        <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
-                            data-bs-target="#modalMarca">Adicionar</button>
-                    </template>                 
+                        <div class="row">
+                            <div class="col mb-10">
+                                <paginate-component>
+                                    <li v-for="l, key in marcas.links" :key="key" 
+                                        :class="l.active ? 'page-item active' : 'page-item'" 
+                                        @click="paginacao(l)">
+                                        <a class="page-link" v-html="l.label"></a>
+                                    </li>                                    
+                                </paginate-component>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
+                                    data-bs-target="#modalMarca">Adicionar</button>
+                            </div>
+                        </div>
+                    </template>
                 </card-component>
 
             </div>
@@ -69,7 +79,7 @@
                         texto-ajuda="Selecione uma imagem no formato PNG">
                         <input type="file" class="form-control-file" id="novoImagem" aria-describedby="novoImagemHelp"
                             placeholder="Selecione uma imagem" @change="carregarImagem($event)">
-                    </input-container-component>                    
+                    </input-container-component>
                 </div>
             </template>
 
@@ -106,6 +116,12 @@ export default {
         }
     },
     methods: {
+        paginacao(l){
+            if(l.url){
+                this.urlBase = l.url
+                this.carregarLista()
+            }
+        },
         carregarLista() {
 
             let config = {
@@ -128,7 +144,7 @@ export default {
             this.arquivoImagem = e.target.files
         },
         salvar() {
-            
+
             let formData = new FormData();
             formData.append('nome', this.nomeMarca)
             formData.append('imagem', this.arquivoImagem[0])
@@ -153,7 +169,7 @@ export default {
                     this.transacaoDetalhes = {
                         mensagem: errors.response.data.message,
                         dados: errors.response.data.errors
-                    }                    
+                    }
                 })
         }
     },
