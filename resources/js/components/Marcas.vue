@@ -10,20 +10,21 @@
                                 <input-container-component titulo="ID" id="inputId" id-help="idHelp"
                                     texto-ajuda="digite o ID da marca desejada.">
                                     <input type="number" class="form-control" id="inputId" aria-describedby="idHelp"
-                                        placeholder="ID da marca">
+                                        placeholder="ID da marca" v-model="busca.id">
                                 </input-container-component>
                             </div>
                             <div class="col mb-3">
                                 <input-container-component titulo="Nome da Marca" id="inputNome" id-help="nomeHelp"
                                     texto-ajuda="digite a marca desejada.">
                                     <input type="text" class="form-control" id="inputNome" aria-describedby="nomeHelp"
-                                        placeholder="Marca">
+                                        placeholder="Marca" v-model="busca.nome">
                                 </input-container-component>
                             </div>
                         </div>
                     </template>
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm float-end">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm float-end"
+                            @click="pesquisar()">Pesquisar</button>
                     </template>
                 </card-component>
 
@@ -39,11 +40,10 @@
                         <div class="row">
                             <div class="col mb-10">
                                 <paginate-component>
-                                    <li v-for="l, key in marcas.links" :key="key" 
-                                        :class="l.active ? 'page-item active' : 'page-item'" 
-                                        @click="paginacao(l)">
+                                    <li v-for="l, key in marcas.links" :key="key"
+                                        :class="l.active ? 'page-item active' : 'page-item'" @click="paginacao(l)">
                                         <a class="page-link" v-html="l.label"></a>
-                                    </li>                                    
+                                    </li>
                                 </paginate-component>
                             </div>
                             <div class="col">
@@ -92,7 +92,9 @@
 </template>
 
 <script>
+import Paginate from './Paginate.vue'
 export default {
+    components: { Paginate },
     computed: {
         token() {
             let token = document.cookie.split(';').find(indice => {
@@ -108,19 +110,56 @@ export default {
     data() {
         return {
             urlBase: 'http://127.0.0.1:8000/api/marca',
+            urlPaginacao: '',
+            urlFiltro: '',
             nomeMarca: '',
             arquivoImagem: [],
             transacaoStatus: '',
             transacaoDetalhes: [],
-            marcas: { data: [] }
+            marcas: { data: [] },
+            busca: { id: '', nome: '' }
         }
     },
     methods: {
-        paginacao(l){
-            if(l.url){
-                this.urlBase = l.url
+        pesquisar() {
+
+            let filtro = ''
+            
+            for (let chave in this.busca) {
+                
+                if (this.busca[chave]) {
+                    if (filtro != '') {
+                            filtro += ";"
+                        }
+                        filtro += chave + ':ilike:' + this.busca[chave]
+                    }
+                    console.log(filtro)
+                }
+
+            if (filtro != '') {
+                this.urlPaginacao = 'page=1'
+                this.urlFiltro = '&filtro=' + filtro
+            } else {
+                this.urlFiltro = ''
+            }
+
+            this.carregarLista()
+        },
+        paginacao(l) {   
+            /*if (l.label == 'pagination.previous') {
+                l.label = 'previous'
+            } else if (l.label == 'pagination.next') {
+                l.label = 'next'
+            } */
+            
+
+            if (l.url) {
+                this.urlPaginacao = l.url.split('?')[1]
                 this.carregarLista()
             }
+
+
+
         },
         carregarLista() {
 
@@ -130,7 +169,11 @@ export default {
                     'Authorization': this.token
                 }
             }
-            axios.get(this.urlBase, config)
+
+
+            let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro
+
+            axios.get(url, config)
                 .then(response => {
                     this.marcas = response.data
                     // console.log(this.marcas)
@@ -138,6 +181,7 @@ export default {
                 .catch(errors => {
                     console.log(errors)
                 })
+
         },
         carregarImagem(e) {
             console.log(this.arquivoImagem[0])
