@@ -30,11 +30,17 @@
 
                 <card-component titulo="Ralação de marcas">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas.data" :titulos="{
-                            id: {titulo: 'ID', tipo: 'texto'},
-                            nome: {titulo: 'Nome', tipo: 'texto'},
-                            imagem: {titulo: 'Imagem', tipo: 'imagem'}
-                        }"></table-component>
+                        <table-component 
+                            :dados="marcas.data"
+                            :visualizar="{visivel: true, dataBsToggle: 'modal', dataBsTarget: '#modalMarcaVisualizar'}"
+                            :editar="true"
+                            :excluir="true" 
+                            :titulos="{
+                                id: {titulo: 'ID', tipo: 'texto'},
+                                nome: {titulo: 'Nome', tipo: 'texto'},
+                                imagem: {titulo: 'Imagem', tipo: 'imagem'}
+                            }"
+                        ></table-component>
                     </template>
                     <template v-slot:rodape>
                         <div class="row">
@@ -87,6 +93,22 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 <button type="button" class="btn btn-primary" @click="salvar()">Salvar</button>
             </template>
+        </modal-component>
+
+        <modal-component id="modalMarcaVisualizar" titulo='Visualizar Marca'>
+            
+            <template v-slot:alertas>
+                a
+            </template>
+
+            <template v-slot:conteudo>
+                teste
+            </template>
+
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </template>
+
         </modal-component>
     </div>
 </template>
@@ -146,13 +168,7 @@ export default {
             this.carregarLista()
         },
         paginacao(l) {   
-            /*if (l.label == 'pagination.previous') {
-                l.label = 'previous'
-            } else if (l.label == 'pagination.next') {
-                l.label = 'next'
-            } */
-            
-
+           
             if (l.url) {
                 this.urlPaginacao = l.url.split('?')[1]
                 this.carregarLista()

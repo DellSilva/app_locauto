@@ -3,7 +3,8 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col" v-for="t, key in titulos" :key="key">{{t.titulo}}</th>                             
+                    <th scope="col" v-for="t, key in titulos" :key="key">{{t.titulo}}</th>   
+                    <th v-if="visualizar.visivel || editar || excluir" ></th>                          
                 </tr>
             </thead>
             <tbody>
@@ -14,6 +15,11 @@
                             <img :src="'/storage/'+valor" width="30" height="30">
                         </span>
                     </td>
+                    <td v-if="visualizar.visivel || editar || excluir" >
+                        <button v-if="visualizar.visivel" class="btn btn-outline-primary btn-sm" :data-bs-toggle="visualizar.dataBsToggle" :data-bs-target="visualizar.dataBsTarget">Visualizar</button>
+                        <button v-if="editar" class="btn btn-outline-primary btn-sm">Editar</button>
+                        <button v-if="excluir" class="btn btn-outline-danger btn-sm">Excluir</button>
+                    </td>
                 </tr>               
             </tbody>
         </table>        
@@ -22,7 +28,7 @@
 
 <script>
 export default {
-    props: ['dados', 'titulos'],
+    props: ['dados', 'titulos', 'visualizar', 'editar', 'excluir'],
     computed: {
         dadosFiltrados() {
 
