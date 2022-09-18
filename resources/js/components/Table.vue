@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div>        
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -16,7 +16,7 @@
                         </span>
                     </td>
                     <td v-if="visualizar.visivel || editar || excluir" >
-                        <button v-if="visualizar.visivel" class="btn btn-outline-primary btn-sm" :data-bs-toggle="visualizar.dataBsToggle" :data-bs-target="visualizar.dataBsTarget">Visualizar</button>
+                        <button v-if="visualizar.visivel" class="btn btn-outline-primary btn-sm" :data-bs-toggle="visualizar.dataBsToggle" :data-bs-target="visualizar.dataBsTarget" @click="setStore(obj)">Visualizar</button>
                         <button v-if="editar" class="btn btn-outline-primary btn-sm">Editar</button>
                         <button v-if="excluir" class="btn btn-outline-danger btn-sm">Excluir</button>
                     </td>
@@ -29,6 +29,11 @@
 <script>
 export default {
     props: ['dados', 'titulos', 'visualizar', 'editar', 'excluir'],
+    methods: {
+        setStore(obj){
+            this.$store.state.item = obj
+        }
+    },
     computed: {
         dadosFiltrados() {
 
