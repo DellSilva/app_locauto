@@ -27,26 +27,7 @@
 </template>
 
 <script>
-export default {
-    filters: {
-        formataDataTempo(d) {
-
-            if(!d) 
-                return ''
-
-            d = d.split('T')
-
-            let data = d[0]
-            let tempo = d[1]
-
-            data = data.split('-')
-            data = data[2] + '/' + data[1] + '/' + data[0]
-
-            console.log(data)
-
-            return data
-        }
-    },
+export default {    
     props: ['dados', 'titulos', 'visualizar', 'editar', 'excluir'],
     methods: {
         setStore(obj){
