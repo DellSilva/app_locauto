@@ -3,9 +3,9 @@ const { default: axios } = require('axios');
 window._ = require('lodash');
 
 try {
-       
+
     require('bootstrap');
-} catch (e) {}
+} catch (e) { }
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -36,6 +36,18 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 axios.interceptors.request.use(
     config => {
+
+        config.headers.Accept = 'application/json'
+       
+        let token = document.cookie.split(';').find(indice => {
+            return indice.includes('token=')
+        })
+
+        token = token.split('=')[1]
+        token = 'Bearer ' + token
+       
+        config.headers.Authorization = token
+        
         console.log('Interceptando a requisição antes do envio', config)
         return config
     },
