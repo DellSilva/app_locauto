@@ -13,7 +13,7 @@
                                 <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="" required autocomplete="email" autofocus v-model="email">                                   
+                                    <input id="email" type="email" class="form-control" name="email" required autocomplete="email" autofocus v-model="email">                                   
                                 </div>
                             </div>
 
@@ -81,7 +81,7 @@
                     .then(response => response.json())
                     .then(data => {                        
                         if(data.token) {
-                            document.cookie = 'token='+data.token+';SameSite=Lax'
+                            document.cookie = 'token='+data.token
                         }
                         e.target.submit()    
                     })
